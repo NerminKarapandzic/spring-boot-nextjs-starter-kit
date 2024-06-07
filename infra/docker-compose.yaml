@@ -1,0 +1,21 @@
+services:
+  database:
+    image: mysql:8.4.0
+    restart: always
+    container_name: database
+    environment:
+      MYSQL_DATABASE: 'starter-kit-db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - "3306:3306"
+    volumes:
+      - starter_kit_db:/var/lib/mysql
+    networks:
+      - app_net
+networks:
+  app_net:
+    driver: bridge
+volumes:
+  starter_kit_db:
