@@ -1,5 +1,6 @@
 package com.example.backend.util;
 
+import com.example.backend.util.exception.ApiException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,13 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     HttpErrorResponse response = HttpErrorResponse.of("Unprocessable entity", 422, errors, generalErrors);
 
     return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+  }
+
+  @org.springframework.web.bind.annotation.ExceptionHandler(ApiException.class)
+  public ResponseEntity<HttpErrorResponse> handleException(ApiException e) {
+    log.info("Handling ApiException: {}", e.getMessage());
+    var response = HttpErrorResponse.of(e.getMessage(), e.getStatus(), e.getErrors(), null);
+    return new ResponseEntity<>(response, HttpStatus.valueOf(e.getStatus()));
   }
 
   @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)

@@ -8,12 +8,19 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -23,13 +30,31 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfiguration {
 
   private final ApplicationProperties applicationProperties;
+  private final UserDetailsService userDetailsService;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(customizer -> {
       customizer
-          .requestMatchers(antMatcher(HttpMethod.POST, "/api/users")).permitAll();
+          .requestMatchers(antMatcher(HttpMethod.POST, "/api/users")).permitAll()
+          .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/login")).permitAll()
+          .anyRequest().authenticated();
     });
+
+    http.exceptionHandling(customizer -> {
+      customizer.authenticationEntryPoint(
+          (request, response, authException) -> {
+            String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+            if (acceptHeader != null && acceptHeader.contains("application/json")) {
+              response.setStatus(401);
+            } else {
+              response.sendRedirect(applicationProperties.getLoginPageUrl());
+            }
+          });
+    });
+
+    http.addFilterBefore(new UsernamePasswordAuthenticationFilter(), LogoutFilter.class);
+    http.userDetailsService(userDetailsService);
 
     http.csrf(csrf -> {
       csrf.disable(); // TODO: We will implement CSRF protection later
@@ -59,5 +84,13 @@ public class SecurityConfiguration {
         return config;
       }
     };
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager() {
+    DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+    daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+    daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+    return new ProviderManager(daoAuthenticationProvider);
   }
 }
