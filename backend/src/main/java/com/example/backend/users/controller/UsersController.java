@@ -2,6 +2,7 @@ package com.example.backend.users.controller;
 
 import com.example.backend.config.ApplicationProperties;
 import com.example.backend.users.data.CreateUserRequest;
+import com.example.backend.users.data.ForgotPasswordRequest;
 import com.example.backend.users.data.UserResponse;
 import com.example.backend.users.service.UserService;
 import jakarta.validation.Valid;
@@ -41,5 +42,14 @@ public class UsersController {
   public RedirectView verifyEmail(@RequestParam String token) {
     userService.verifyEmail(token);
     return new RedirectView(applicationProperties.getLoginPageUrl());
+  }
+
+  /**
+   * Request a password reset email
+   */
+  @PostMapping("/forgot-password")
+  public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req) {
+    userService.forgotPassword(req.getEmail());
+    return ResponseEntity.ok().build();
   }
 }
