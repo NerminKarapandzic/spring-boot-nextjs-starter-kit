@@ -38,7 +38,7 @@ public class SendWelcomeEmailJobHandler implements JobRequestHandler<SendWelcome
   }
 
   private void sendWelcomeEmail(User user, VerificationCode code) {
-    String verificationLink = applicationProperties.getBaseUrl() + "/auth/verify-email?token=" + code.getCode();
+    String verificationLink = applicationProperties.getBaseUrl() + "/api/users/verify-email?token=" + code.getCode();
     Context thymeleafContext = new Context();
     thymeleafContext.setVariable("user", user);
     thymeleafContext.setVariable("verificationLink", verificationLink);
