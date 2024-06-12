@@ -39,6 +39,7 @@ public class SecurityConfiguration {
           .requestMatchers(antMatcher(HttpMethod.POST, "/api/users")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/users/verify-email")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.POST, "/api/users/forgot-password")).permitAll()
+          .requestMatchers(antMatcher(HttpMethod.PATCH, "/api/users/reset-password")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/login")).permitAll()
           .anyRequest().authenticated();
     });

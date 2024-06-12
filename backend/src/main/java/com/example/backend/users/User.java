@@ -47,6 +47,11 @@ public class User extends AbstractEntity implements UserDetails {
     this.role = Role.USER;
   }
 
+  public void updatePassword(String newPassword) {
+    PasswordEncoder passwordEncoder = ApplicationContextProvider.bean(PasswordEncoder.class);
+    this.password = passwordEncoder.encode(newPassword);
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.singleton(new SimpleGrantedAuthority(role.name()));

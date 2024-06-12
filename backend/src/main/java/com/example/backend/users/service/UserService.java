@@ -4,6 +4,7 @@ import com.example.backend.users.PasswordResetToken;
 import com.example.backend.users.User;
 import com.example.backend.users.VerificationCode;
 import com.example.backend.users.data.CreateUserRequest;
+import com.example.backend.users.data.UpdateUserPasswordRequest;
 import com.example.backend.users.data.UserResponse;
 import com.example.backend.users.jobs.SendResetPasswordEmailJob;
 import com.example.backend.users.jobs.SendWelcomeEmailJob;
@@ -59,5 +60,19 @@ public class UserService {
     passwordResetTokenRepository.save(passwordResetToken);
     SendResetPasswordEmailJob sendResetPasswordEmailJob = new SendResetPasswordEmailJob(passwordResetToken.getId());
     BackgroundJobRequest.enqueue(sendResetPasswordEmailJob);
+  }
+
+  @Transactional
+  public void resetPassword(UpdateUserPasswordRequest request) {
+    PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(request.getPasswordResetToken())
+        .orElseThrow(() -> ApiException.builder().status(404).message("Password reset token not found").build());
+
+    if (passwordResetToken.isExpired()) {
+      throw ApiException.builder().status(400).message("Password reset token is expired").build();
+    }
+
+    User user = passwordResetToken.getUser();
+    user.updatePassword(request.getPassword());
+    userRepository.save(user);
   }
 }

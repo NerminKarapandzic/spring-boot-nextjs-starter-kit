@@ -3,13 +3,18 @@ package com.example.backend.users.controller;
 import com.example.backend.config.ApplicationProperties;
 import com.example.backend.users.data.CreateUserRequest;
 import com.example.backend.users.data.ForgotPasswordRequest;
+import com.example.backend.users.data.UpdateUserPasswordRequest;
+import com.example.backend.users.data.UpdateUserRequest;
 import com.example.backend.users.data.UserResponse;
 import com.example.backend.users.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +55,18 @@ public class UsersController {
   @PostMapping("/forgot-password")
   public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req) {
     userService.forgotPassword(req.getEmail());
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * Reset the password of an existing user, uses the password reset token
+   * <p>
+   * Only allowed with the password reset token
+   */
+  @PatchMapping("/reset-password")
+  public ResponseEntity<Void> resetPassword(
+      @Valid @RequestBody UpdateUserPasswordRequest requestDTO) {
+    userService.resetPassword(requestDTO);
     return ResponseEntity.ok().build();
   }
 }
