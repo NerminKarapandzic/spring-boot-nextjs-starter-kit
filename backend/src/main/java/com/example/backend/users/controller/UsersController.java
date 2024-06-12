@@ -69,4 +69,27 @@ public class UsersController {
     userService.resetPassword(requestDTO);
     return ResponseEntity.ok().build();
   }
+
+  /**
+   * Update an existing user.
+   * <p>
+   * Only allowed to self.
+   */
+  @PutMapping("/{id}")
+  public ResponseEntity<UserResponse> update(@Valid @RequestBody UpdateUserRequest request) {
+    UserResponse user = userService.update(request);
+    return ResponseEntity.ok(user);
+  }
+
+  /**
+   * Update the password of an existing user.
+   * <p>
+   * Only allowed with the correct old password
+   */
+  @PatchMapping("/password")
+  public ResponseEntity<UserResponse> updatePassword(
+      @Valid @RequestBody UpdateUserPasswordRequest requestDTO) {
+    UserResponse user = userService.updatePassword(requestDTO);
+    return ResponseEntity.ok(user);
+  }
 }

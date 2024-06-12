@@ -2,6 +2,7 @@ package com.example.backend.users;
 
 import com.example.backend.entity.AbstractEntity;
 import com.example.backend.users.data.CreateUserRequest;
+import com.example.backend.users.data.UpdateUserRequest;
 import com.example.backend.util.ApplicationContextProvider;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -45,6 +46,11 @@ public class User extends AbstractEntity implements UserDetails {
     this.firstName = data.getFirstName();
     this.lastName = data.getLastName();
     this.role = Role.USER;
+  }
+
+  public void update(UpdateUserRequest request) {
+    this.firstName = request.getFirstName();
+    this.lastName = request.getLastName();
   }
 
   public void updatePassword(String newPassword) {
