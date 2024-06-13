@@ -1,6 +1,9 @@
 package com.example.backend.users.service;
 
 import com.example.backend.auth.SecurityUtil;
+import com.example.backend.s3.UploadedFile;
+import com.example.backend.s3.repository.UploadedFileRepository;
+import com.example.backend.s3.service.FileUploadService;
 import com.example.backend.users.PasswordResetToken;
 import com.example.backend.users.User;
 import com.example.backend.users.VerificationCode;
@@ -15,6 +18,7 @@ import com.example.backend.users.repository.UserRepository;
 import com.example.backend.users.repository.VerificationCodeRepository;
 import com.example.backend.util.exception.ApiException;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.jobrunr.scheduling.BackgroundJobRequest;
@@ -22,6 +26,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +35,9 @@ public class UserService {
   private final UserRepository userRepository;
   private final VerificationCodeRepository verificationCodeRepository;
   private final PasswordResetTokenRepository passwordResetTokenRepository;
+  private final UploadedFileRepository uploadedFileRepository;
   private final PasswordEncoder passwordEncoder;
+  private final FileUploadService fileUploadService;
 
   @Transactional
   public UserResponse create(@Valid CreateUserRequest request) {
@@ -100,6 +107,24 @@ public class UserService {
 
     user.updatePassword(request.getPassword());
     user = userRepository.save(user);
+    return new UserResponse(user);
+  }
+
+  public UserResponse updateProfilePicture(MultipartFile file) {
+    User user = SecurityUtil.getAuthenticatedUser();
+    UploadedFile uploadedFile = new UploadedFile(file.getOriginalFilename(), file.getSize(), user);
+    try {
+      String url = fileUploadService.uploadFile(
+          uploadedFile.buildPath("profile-picture"),
+          file.getBytes());
+      uploadedFile.onUploaded(url);
+      user.setProfileImageUrl(url);
+      userRepository.save(user);
+      uploadedFileRepository.save(uploadedFile);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
     return new UserResponse(user);
   }
 }

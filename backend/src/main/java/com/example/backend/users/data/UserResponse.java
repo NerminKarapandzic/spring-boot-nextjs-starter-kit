@@ -11,6 +11,7 @@ public class UserResponse {
   private String firstName;
   private String lastName;
   private String email;
+  private String profileImageUrl;
 
   public UserResponse(User user) {
     this.id = user.getId();
@@ -18,5 +19,6 @@ public class UserResponse {
     this.firstName = user.getFirstName();
     this.lastName = user.getLastName();
     this.email = user.getEmail();
+    this.profileImageUrl = user.getProfileImageUrl();
   }
 }

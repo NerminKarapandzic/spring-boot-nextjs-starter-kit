@@ -31,6 +31,8 @@ public class User extends AbstractEntity implements UserDetails {
   private String lastName;
   @Setter
   private boolean verified = false;
+  @Setter
+  private String profileImageUrl;
   @Enumerated(EnumType.STRING)
   private Role role;
 

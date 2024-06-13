@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
@@ -90,6 +91,17 @@ public class UsersController {
   public ResponseEntity<UserResponse> updatePassword(
       @Valid @RequestBody UpdateUserPasswordRequest requestDTO) {
     UserResponse user = userService.updatePassword(requestDTO);
+    return ResponseEntity.ok(user);
+  }
+
+  /**
+   * Update users profile picture.
+   * Receives a multipart file
+   */
+  @PatchMapping("/{id}/profile-picture")
+  public ResponseEntity<UserResponse> updateProfilePicture(
+      @PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    UserResponse user = userService.updateProfilePicture(file);
     return ResponseEntity.ok(user);
   }
 }
