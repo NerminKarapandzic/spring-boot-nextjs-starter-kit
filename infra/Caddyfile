@@ -1,0 +1,17 @@
+http://localhost:8080 {
+    route /api/* {
+        reverse_proxy http://host.docker.internal:8081
+    }
+
+    route /oauth2/authorization/* {
+        reverse_proxy http://host.docker.internal:8081
+    }
+
+    route /login/oauth2/code/* {
+        reverse_proxy http://host.docker.internal:8081
+    }
+
+    route * {
+        reverse_proxy http://host.docker.internal:3000
+    }
+}
