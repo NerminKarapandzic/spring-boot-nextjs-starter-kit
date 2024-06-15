@@ -31,6 +31,7 @@ public class SecurityConfiguration {
 
   private final ApplicationProperties applicationProperties;
   private final UserDetailsService userDetailsService;
+  private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,6 +43,10 @@ public class SecurityConfiguration {
           .requestMatchers(antMatcher(HttpMethod.PATCH, "/api/users/reset-password")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/login")).permitAll()
           .anyRequest().authenticated();
+    });
+
+    http.oauth2Login(customizer -> {
+      customizer.successHandler(oauth2LoginSuccessHandler);
     });
 
     http.exceptionHandling(customizer -> {

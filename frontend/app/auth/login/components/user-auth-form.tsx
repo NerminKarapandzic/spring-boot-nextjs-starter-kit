@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import ErrorFeedback from "@/components/error-feedback";
+import Link from "next/link";
+import { FaGithub, FaGoogle} from "react-icons/fa";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -42,6 +44,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     resolver: zodResolver(loginFormSchema),
     reValidateMode: "onSubmit",
   });
+
+  function getProviderLoginUrl(provider: 'google' | 'facebook' | 'github' | 'okta') {
+    return process.env.NEXT_PUBLIC_BASE_URL + `/oauth2/authorization/${provider}`
+  }
 
   return (
     <div className="grid gap-6">
@@ -98,6 +104,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             Or continue with
           </span>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-y-2">
+        <Link href={getProviderLoginUrl('github')}>
+          <Button variant="outline" type="button" disabled={isLoading} className="w-full">
+            <FaGithub className="mr-2 h-4 w-4" />
+            GitHub
+          </Button>
+        </Link>
+        
+        <Link href={getProviderLoginUrl('google')}>
+          <Button variant="outline" type="button" disabled={isLoading} className="w-full">
+            <FaGoogle className="mr-2 h-4 w-4" />
+            Google
+          </Button>
+        </Link>
       </div>
     </div>
   );
