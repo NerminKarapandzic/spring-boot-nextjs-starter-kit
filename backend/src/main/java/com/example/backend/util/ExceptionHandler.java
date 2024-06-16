@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -53,6 +54,13 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     log.info("Handling BadCredentialsException: {}", e.getMessage());
     var response = HttpErrorResponse.of(e.getMessage(), 401, null, null);
     return new ResponseEntity<>(response, HttpStatus.valueOf(401));
+  }
+
+  @org.springframework.web.bind.annotation.ExceptionHandler(AuthorizationDeniedException.class)
+  public ResponseEntity<HttpErrorResponse> handleException(AuthorizationDeniedException e) {
+    log.info("Handling AuthorizationDeniedException: {}", e.getMessage());
+    var response = HttpErrorResponse.of(e.getMessage(), 403, null, null);
+    return new ResponseEntity<>(response, HttpStatus.valueOf(403));
   }
 
   @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)

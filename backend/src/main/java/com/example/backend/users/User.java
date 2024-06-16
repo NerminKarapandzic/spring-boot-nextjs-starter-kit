@@ -39,6 +39,7 @@ public class User extends AbstractEntity implements UserDetails {
   @Setter
   private String profileImageUrl;
   @Enumerated(EnumType.STRING)
+  @Setter
   private Role role;
 
   @Setter
@@ -91,7 +92,7 @@ public class User extends AbstractEntity implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singleton(new SimpleGrantedAuthority(role.name()));
+    return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
   }
 
   @Override

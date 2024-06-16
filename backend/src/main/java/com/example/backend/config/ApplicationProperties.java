@@ -16,4 +16,6 @@ public class ApplicationProperties {
   private String baseUrl;
   private String loginPageUrl;
   private String loginSuccessUrl;
+  private String adminUserEmail;
+  private String adminUserPassword;
 }

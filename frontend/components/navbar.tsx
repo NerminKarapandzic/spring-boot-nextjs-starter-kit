@@ -9,6 +9,7 @@ import ModeToggle from "./mode-toggle";
 import Container from "./container";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { UserNav } from "./user-nav";
+import AdminNav from "./admin-nav";
 
 interface NavbarProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function Navbar({ className, ...props }: NavbarProps) {
@@ -25,6 +26,7 @@ export default function Navbar({ className, ...props }: NavbarProps) {
         <div className="flex gap-x-2 items-center">
           <ModeToggle />
 
+          <AdminNav />
           {user && (
             <UserNav />
           )}
