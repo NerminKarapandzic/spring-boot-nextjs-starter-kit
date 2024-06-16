@@ -40,4 +40,13 @@ public class AuthController {
     authService.logout(request, response);
     return ResponseEntity.ok().build();
   }
+
+  /**
+   * We don't have to do anything in this endpoint, the CsrfFilter will handle it.
+   * This endpoint should be invoked by the frontend to get the CSRF token.
+   */
+  @GetMapping("/csrf")
+  public ResponseEntity<?> csrf() {
+    return ResponseEntity.ok().build();
+  }
 }

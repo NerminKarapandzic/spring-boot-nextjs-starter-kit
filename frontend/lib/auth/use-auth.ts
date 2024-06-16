@@ -32,7 +32,7 @@ export const useAuthGuard = ({
     props: any;
   }) => {
     onError(undefined);
-    //await csrf();
+    await csrf();
     httpClient
       .post<HttpErrorResponse>("/api/auth/login", {
         email: props.email,
@@ -45,9 +45,9 @@ export const useAuthGuard = ({
       });
   };
 
-  // const csrf = async () => {
-  //   await httpClient.get("/api/auth/csrf")
-  // }
+  const csrf = async () => {
+    await httpClient.get("/api/auth/csrf")
+  }
 
   const logout = async () => {
     if (!error) {
