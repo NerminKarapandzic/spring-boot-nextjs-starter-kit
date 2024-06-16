@@ -7,6 +7,7 @@ import com.example.backend.util.ApplicationContextProvider;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class User extends AbstractEntity implements UserDetails {
   @OneToOne(mappedBy = "user")
   private VerificationCode verificationCode;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
   private List<UserConnectedAccount> connectedAccounts = new ArrayList<>();
 
 
