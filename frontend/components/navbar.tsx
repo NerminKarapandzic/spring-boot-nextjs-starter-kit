@@ -30,6 +30,11 @@ export default function Navbar({ className, ...props }: NavbarProps) {
           {user && (
             <UserNav />
           )}
+          {user?.authorities.includes("ROLE_PREVIOUS_ADMINISTRATOR") && (
+            <a href={"/api/auth/impersonate/exit"}>
+              <Button>Exit switch</Button>
+            </a>
+          )}
 
           {!user && (
             <Link href={"/auth/login"}>

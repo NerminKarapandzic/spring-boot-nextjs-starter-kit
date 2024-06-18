@@ -1,6 +1,7 @@
 "use client";
 import AppPagination from "@/components/app-pagination";
 import Container from "@/components/container";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -19,10 +20,13 @@ import useSWR from "swr";
 export default function page() {
   const [page, setPage] = React.useState(0);
 
-  const {data} = useSWR(`/api/admin/users?page=${page}`, () => {
-    return httpClient.get<PagedResponse<UserResponse>>('/api/admin/users', {params: {page}})
-      .then(res => res.data)
-  })
+  const { data } = useSWR(`/api/admin/users?page=${page}`, () => {
+    return httpClient
+      .get<PagedResponse<UserResponse>>("/api/admin/users", {
+        params: { page },
+      })
+      .then((res) => res.data);
+  });
 
   return (
     <Container size="lg">
@@ -35,6 +39,7 @@ export default function page() {
             <TableHead>First name</TableHead>
             <TableHead>Last name</TableHead>
             <TableHead>Role</TableHead>
+            <TableHead>Impersonate</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -45,6 +50,11 @@ export default function page() {
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>
               <TableCell>{user.role}</TableCell>
+              <TableCell>
+                <a href={`/api/auth/impersonate?username=${user.email}`}>
+                  <Button>Impersonate</Button>
+                </a>
+              </TableCell>
             </TableRow>
           ))}
           {!data?.data ||

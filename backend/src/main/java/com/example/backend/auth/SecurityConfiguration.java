@@ -13,7 +13,6 @@ import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -26,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -56,6 +56,8 @@ public class SecurityConfiguration {
           .requestMatchers(antMatcher(HttpMethod.PATCH, "/api/users/reset-password")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/login")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/csrf")).permitAll()
+          .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate")).hasRole("ADMIN")
+          .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate/exit")).hasRole("PREVIOUS_ADMINISTRATOR")
           .anyRequest().authenticated();
     });
 
@@ -157,5 +159,17 @@ public class SecurityConfiguration {
 
       filterChain.doFilter(request, response);
     }
+  }
+
+  @Bean
+  public SwitchUserFilter switchUserFilter() {
+    SwitchUserFilter filter = new SwitchUserFilter();
+    filter.setUserDetailsService(userDetailsService);
+    filter.setSwitchUserMatcher(antMatcher(HttpMethod.GET, "/api/auth/impersonate"));
+    filter.setExitUserMatcher(antMatcher(HttpMethod.GET, "/api/auth/impersonate/exit"));
+    filter.setSuccessHandler((request, response, authentication) -> {
+      response.sendRedirect(applicationProperties.getBaseUrl() + "/switch-success");
+    });
+    return filter;
   }
 }

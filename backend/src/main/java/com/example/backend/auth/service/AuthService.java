@@ -5,15 +5,16 @@ import com.example.backend.auth.data.LoginRequest;
 import com.example.backend.users.User;
 import com.example.backend.users.data.UserResponse;
 import com.example.backend.users.repository.UserRepository;
-import com.example.backend.users.repository.VerificationCodeRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
@@ -52,7 +53,8 @@ public class AuthService {
   @Transactional
   public UserResponse getSession(HttpServletRequest request) {
     User user = SecurityUtil.getAuthenticatedUser();
-    return new UserResponse(user);
+    Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+    return new UserResponse(user, authorities);
   }
 
   public void logout(HttpServletRequest request, HttpServletResponse response) {
