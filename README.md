@@ -1,3 +1,6 @@
+##  Youtube video tutorial
+https://www.youtube.com/watch?v=EbIps-suESk
+
 ## Getting started
 
 - Clone the repository
