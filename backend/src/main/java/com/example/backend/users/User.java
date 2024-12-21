@@ -4,6 +4,7 @@ import com.example.backend.entity.AbstractEntity;
 import com.example.backend.users.data.CreateUserRequest;
 import com.example.backend.users.data.UpdateUserRequest;
 import com.example.backend.util.ApplicationContextProvider;
+import com.example.backend.util.Client;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 @Entity
 @Getter
 @NoArgsConstructor
+@Client
 public class User extends AbstractEntity implements UserDetails {
   private String email;
   private String password;

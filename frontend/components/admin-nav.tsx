@@ -1,27 +1,24 @@
-import React from 'react'
+import React from "react";
 import Link from "next/link";
-import RoleGuard from './role-guard';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
-import { Button } from './ui/button';
-import { Role } from '@/models/user/UserResponse';
+import RoleGuard from "./role-guard";
+import { Role } from "@/models/user/UserResponse";
+import { Button, Menu, MenuItem } from "@mantine/core";
 
 export default function AdminNav() {
   return (
     <RoleGuard rolesAllowed={[Role.ADMIN]}>
-      <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative mx-2">
-          Admin
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
+      <Menu>
+        <Menu.Target>
+          <Button variant="subtle" className="relative mx-2">
+            Admin
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown className="w-56">
+          <MenuItem>
             <Link href="/admin/users">Users</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          </MenuItem>
+        </Menu.Dropdown>
+      </Menu>
     </RoleGuard>
-  )
+  );
 }

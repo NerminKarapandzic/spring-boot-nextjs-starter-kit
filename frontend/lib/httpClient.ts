@@ -1,3 +1,4 @@
+import { RestApplicationClient } from '@/models/backend'
 import Axios from 'axios'
 require('dotenv').config()
 
@@ -12,5 +13,7 @@ const httpClient = Axios.create({
   xsrfCookieName: 'XSRF-TOKEN',
   withXSRFToken: true,
 })
+
+export const restClient = new RestApplicationClient(httpClient)
 
 export default httpClient

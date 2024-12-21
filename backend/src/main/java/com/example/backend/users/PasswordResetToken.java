@@ -1,6 +1,7 @@
 package com.example.backend.users;
 
 import com.example.backend.entity.AbstractEntity;
+import com.example.backend.util.Client;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 @Table(name = "password_reset_token")
 @Getter
 @NoArgsConstructor
+@Client
 public class PasswordResetToken extends AbstractEntity {
 
   private String token;

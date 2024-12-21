@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,6 +59,10 @@ public class SecurityConfiguration {
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/csrf")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate")).hasRole("ADMIN")
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate/exit")).hasRole("PREVIOUS_ADMINISTRATOR")
+          .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+          .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
+          .requestMatchers(antMatcher("/swagger-resources/**")).permitAll()
+          .requestMatchers(antMatcher("/webjars/**")).permitAll()
           .anyRequest().authenticated();
     });
 

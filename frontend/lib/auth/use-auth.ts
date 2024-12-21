@@ -1,9 +1,10 @@
 import useSWR from "swr";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import httpClient from "../httpClient";
+import httpClient, { restClient } from "../httpClient";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { UserResponse } from "@/models/user/UserResponse";
+import { LoginRequest } from "@/models/backend";
 
 interface AuthProps {
   middleware?: "auth" | "guest";
@@ -29,15 +30,11 @@ export const useAuthGuard = ({
     props,
   }: {
     onError: (errors: HttpErrorResponse | undefined) => void;
-    props: any;
+    props: LoginRequest;
   }) => {
     onError(undefined);
     await csrf();
-    httpClient
-      .post<HttpErrorResponse>("/api/auth/login", {
-        email: props.email,
-        password: props.password,
-      })
+    restClient.login(props)
       .then(() => mutate())
       .catch((err) => {
         const errors = err.response.data as HttpErrorResponse;
@@ -46,12 +43,12 @@ export const useAuthGuard = ({
   };
 
   const csrf = async () => {
-    await httpClient.get("/api/auth/csrf")
-  }
+    await restClient.csrf();
+  };
 
   const logout = async () => {
     if (!error) {
-      await httpClient.post("/api/auth/logout").then(() => mutate());
+      await restClient.logout().then(() => mutate());
     }
 
     window.location.pathname = "/auth/login";
@@ -73,6 +70,6 @@ export const useAuthGuard = ({
     user,
     login,
     logout,
-    mutate
+    mutate,
   };
 };

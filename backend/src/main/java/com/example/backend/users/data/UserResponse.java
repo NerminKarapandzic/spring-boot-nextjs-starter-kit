@@ -2,6 +2,8 @@ package com.example.backend.users.data;
 
 import com.example.backend.users.Role;
 import com.example.backend.users.User;
+import com.example.backend.util.Client;
+import jakarta.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,12 +12,16 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 @Data
+@Client
 public class UserResponse {
   private Long id;
   private Role role;
+  @Nullable
   private String firstName;
+  @Nullable
   private String lastName;
   private String email;
+  @Nullable
   private String profileImageUrl;
   private List<ConnectedAccountResponse> connectedAccounts = new ArrayList<>();
   private List<String> authorities = new ArrayList<>();

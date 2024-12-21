@@ -1,6 +1,7 @@
 package com.example.backend.users;
 
 import com.example.backend.entity.AbstractEntity;
+import com.example.backend.util.Client;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Client
 public class UserConnectedAccount extends AbstractEntity {
   private String provider;
   private String providerId;

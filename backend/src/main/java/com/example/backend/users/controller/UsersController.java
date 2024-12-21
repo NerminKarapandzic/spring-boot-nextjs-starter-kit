@@ -7,6 +7,7 @@ import com.example.backend.users.data.UpdateUserPasswordRequest;
 import com.example.backend.users.data.UpdateUserRequest;
 import com.example.backend.users.data.UserResponse;
 import com.example.backend.users.service.UserService;
+import com.example.backend.util.Client;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Client
 public class UsersController {
 
   private final UserService userService;
@@ -35,7 +37,7 @@ public class UsersController {
    * be sent to the user.
    */
   @PostMapping
-  public ResponseEntity<UserResponse> create(@Valid @RequestBody CreateUserRequest request) {
+  public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
     UserResponse user = userService.create(request);
     return ResponseEntity.ok(user);
   }
@@ -77,7 +79,7 @@ public class UsersController {
    * Only allowed to self.
    */
   @PutMapping("/{id}")
-  public ResponseEntity<UserResponse> update(@Valid @RequestBody UpdateUserRequest request) {
+  public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UpdateUserRequest request) {
     UserResponse user = userService.update(request);
     return ResponseEntity.ok(user);
   }

@@ -3,6 +3,7 @@ package com.example.backend.auth.controller;
 import com.example.backend.auth.data.LoginRequest;
 import com.example.backend.auth.service.AuthService;
 import com.example.backend.users.data.UserResponse;
+import com.example.backend.util.Client;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 @Slf4j
+@Client
 public class AuthController {
 
   private final AuthService authService;
