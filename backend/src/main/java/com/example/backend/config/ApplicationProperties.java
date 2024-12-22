@@ -18,4 +18,7 @@ public class ApplicationProperties {
   private String loginSuccessUrl;
   private String adminUserEmail;
   private String adminUserPassword;
+  private String vapidPublicKey;
+  private String vapidPrivateKey;
+  private String vapidSubject;
 }

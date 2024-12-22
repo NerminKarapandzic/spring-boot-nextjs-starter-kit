@@ -59,6 +59,7 @@ public class SecurityConfiguration {
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/csrf")).permitAll()
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate")).hasRole("ADMIN")
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate/exit")).hasRole("PREVIOUS_ADMINISTRATOR")
+          .requestMatchers(antMatcher(HttpMethod.GET, "/api/notifications/subscribe")).permitAll()
           .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
           .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
           .requestMatchers(antMatcher("/swagger-resources/**")).permitAll()

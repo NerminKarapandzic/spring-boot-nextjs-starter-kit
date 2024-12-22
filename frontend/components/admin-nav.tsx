@@ -17,6 +17,9 @@ export default function AdminNav() {
           <MenuItem>
             <Link href="/admin/users">Users</Link>
           </MenuItem>
+          <MenuItem>
+            <Link href="/admin/notifications">Notifications</Link>
+          </MenuItem>
         </Menu.Dropdown>
       </Menu>
     </RoleGuard>

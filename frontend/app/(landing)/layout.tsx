@@ -2,13 +2,21 @@
 
 import Logo from '@/components/Logo';
 import Navbar from '@/components/Navbar';
+import { useSubscribeToPushNotifications } from '@/lib/hooks/useSubscribeToPushNotifications';
 import { AppShell, Burger, Button, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import Link from 'next/link';
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export default function layout({children}: {children: React.ReactNode}) {
   const [opened, { toggle}] = useDisclosure(false);
+
+  const { subscribe, subscription } = useSubscribeToPushNotifications();
+
+  useEffect(() => {
+    if (!subscription) {
+      subscribe()
+    }
+  }, [subscription])
 
   return (
     <AppShell

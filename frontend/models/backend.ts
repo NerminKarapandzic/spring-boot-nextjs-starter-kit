@@ -1,6 +1,41 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-21 20:42:22.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-22 19:03:57.
+
+export interface Notification {
+    id: number;
+    title: string;
+    message: string;
+    url: string;
+    delivered: boolean;
+    createdAt: Date;
+}
+
+export interface NotificationPermissionRequest {
+    id?: number;
+    requestedBy: RequestEvent;
+    deniedReason: DeniedReason;
+    createdAt?: Date;
+}
+
+export interface PushNotificationSubscription {
+    id: number;
+    endpoint: string;
+    p256dhKey: string;
+    authKey: string;
+}
+
+export interface SendNotificationRequest {
+    title: string;
+    message: string;
+    url: string;
+}
+
+export interface SubscriptionRequest {
+    endpoint: string;
+    p256dh: string;
+    auth: string;
+}
 
 export interface UploadedFile extends AbstractEntity {
     url: string;
@@ -95,10 +130,10 @@ export interface UserDetails extends Serializable {
     enabled: boolean;
     password: string;
     username: string;
-    accountNonLocked: boolean;
     authorities: GrantedAuthority[];
-    credentialsNonExpired: boolean;
+    accountNonLocked: boolean;
     accountNonExpired: boolean;
+    credentialsNonExpired: boolean;
 }
 
 export interface MultipartFile extends InputStreamSource {
@@ -124,8 +159,8 @@ export interface RedirectView extends AbstractUrlBasedView, SmartView {
     statusCode: HttpStatus;
     expandUriTemplateVariables: boolean;
     propagateQueryParams: boolean;
-    attributes: { [index: string]: any };
     attributesCSV: string;
+    attributes: { [index: string]: any };
 }
 
 export interface ConnectedAccountResponse {
@@ -166,8 +201,8 @@ export interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
     id: string;
     displayName: string;
     applicationName: string;
-    autowireCapableBeanFactory: AutowireCapableBeanFactory;
     startupDate: number;
+    autowireCapableBeanFactory: AutowireCapableBeanFactory;
 }
 
 export interface ServletContext {
@@ -175,30 +210,30 @@ export interface ServletContext {
     majorVersion: number;
     minorVersion: number;
     attributeNames: Enumeration<string>;
-    requestCharacterEncoding: string;
-    responseCharacterEncoding: string;
-    defaultSessionTrackingModes: SessionTrackingMode[];
-    effectiveSessionTrackingModes: SessionTrackingMode[];
     contextPath: string;
-    effectiveMajorVersion: number;
-    sessionCookieConfig: SessionCookieConfig;
-    servletContextName: string;
-    servletRegistrations: { [index: string]: ServletRegistration };
-    initParameterNames: Enumeration<string>;
-    virtualServerName: string;
-    filterRegistrations: { [index: string]: FilterRegistration };
-    jspConfigDescriptor: JspConfigDescriptor;
-    effectiveMinorVersion: number;
+    /**
+     * @deprecated
+     */
+    servlets: Enumeration<Servlet>;
     /**
      * @deprecated
      */
     servletNames: Enumeration<string>;
     serverInfo: string;
-    /**
-     * @deprecated
-     */
-    servlets: Enumeration<Servlet>;
     sessionTimeout: number;
+    requestCharacterEncoding: string;
+    responseCharacterEncoding: string;
+    defaultSessionTrackingModes: SessionTrackingMode[];
+    effectiveSessionTrackingModes: SessionTrackingMode[];
+    effectiveMajorVersion: number;
+    servletRegistrations: { [index: string]: ServletRegistration };
+    jspConfigDescriptor: JspConfigDescriptor;
+    filterRegistrations: { [index: string]: FilterRegistration };
+    virtualServerName: string;
+    effectiveMinorVersion: number;
+    initParameterNames: Enumeration<string>;
+    servletContextName: string;
+    sessionCookieConfig: SessionCookieConfig;
 }
 
 export interface AbstractUrlBasedView extends AbstractView, InitializingBean {
@@ -260,24 +295,14 @@ export interface ResourcePatternResolver extends ResourceLoader {
 export interface Enumeration<E> {
 }
 
-export interface SessionCookieConfig {
-    name: string;
-    path: string;
-    comment: string;
-    secure: boolean;
-    domain: string;
-    httpOnly: boolean;
-    maxAge: number;
+export interface Servlet {
+    servletInfo: string;
+    servletConfig: ServletConfig;
 }
 
 export interface ServletRegistration extends Registration {
-    mappings: string[];
     runAsRole: string;
-}
-
-export interface FilterRegistration extends Registration {
-    servletNameMappings: string[];
-    urlPatternMappings: string[];
+    mappings: string[];
 }
 
 export interface JspConfigDescriptor {
@@ -285,9 +310,19 @@ export interface JspConfigDescriptor {
     jspPropertyGroups: JspPropertyGroupDescriptor[];
 }
 
-export interface Servlet {
-    servletConfig: ServletConfig;
-    servletInfo: string;
+export interface FilterRegistration extends Registration {
+    servletNameMappings: string[];
+    urlPatternMappings: string[];
+}
+
+export interface SessionCookieConfig {
+    name: string;
+    path: string;
+    comment: string;
+    secure: boolean;
+    domain: string;
+    maxAge: number;
+    httpOnly: boolean;
 }
 
 export interface AbstractView extends WebApplicationObjectSupport, View, BeanNameAware {
@@ -315,6 +350,12 @@ export interface ResourceLoader {
     classLoader: ClassLoader;
 }
 
+export interface ServletConfig {
+    servletName: string;
+    servletContext: ServletContext;
+    initParameterNames: Enumeration<string>;
+}
+
 export interface Registration {
     name: string;
     className: string;
@@ -322,29 +363,23 @@ export interface Registration {
 }
 
 export interface TaglibDescriptor {
-    taglibLocation: string;
     taglibURI: string;
+    taglibLocation: string;
 }
 
 export interface JspPropertyGroupDescriptor {
     buffer: string;
+    includeCodas: string[];
+    includePreludes: string[];
+    elIgnored: string;
+    urlPatterns: string[];
+    pageEncoding: string;
     isXml: string;
     trimDirectiveWhitespaces: string;
     deferredSyntaxAllowedAsLiteral: string;
     errorOnUndeclaredNamespace: string;
     scriptingInvalid: string;
     defaultContentType: string;
-    pageEncoding: string;
-    elIgnored: string;
-    includePreludes: string[];
-    urlPatterns: string[];
-    includeCodas: string[];
-}
-
-export interface ServletConfig {
-    servletContext: ServletContext;
-    initParameterNames: Enumeration<string>;
-    servletName: string;
 }
 
 export interface WebApplicationObjectSupport extends ApplicationObjectSupport, ServletContextAware {
@@ -420,6 +455,38 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP POST /api/notifications/delivery/{id}
+     * Java method: com.example.backend.pushNotifications.NotificationsController.pushNotificationDelivery
+     */
+    pushNotificationDelivery(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/notifications/delivery/${id}` });
+    }
+
+    /**
+     * HTTP POST /api/notifications/denied
+     * Java method: com.example.backend.pushNotifications.NotificationsController.pushNotificationRequestDenied
+     */
+    pushNotificationRequestDenied(request: NotificationPermissionRequest): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/notifications/denied`, data: request });
+    }
+
+    /**
+     * HTTP POST /api/notifications/notify
+     * Java method: com.example.backend.pushNotifications.NotificationsController.pushNotificationNotify
+     */
+    pushNotificationNotify(request: SendNotificationRequest): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/notifications/notify`, data: request });
+    }
+
+    /**
+     * HTTP POST /api/notifications/subscribe
+     * Java method: com.example.backend.pushNotifications.NotificationsController.pushNotificationSubscribe
+     */
+    pushNotificationSubscribe(request: SubscriptionRequest): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/notifications/subscribe`, data: request });
+    }
+
+    /**
      * HTTP POST /api/users
      * Java method: com.example.backend.users.controller.UsersController.createUser
      */
@@ -477,6 +544,10 @@ export class RestApplicationClient {
 }
 
 export type RestResponse<R> = Promise<R>;
+
+export type RequestEvent = "ONLOAD" | "USER_INTERACTION";
+
+export type DeniedReason = "NOT_SUPPORTED" | "NOT_GRANTED";
 
 export type Role = "USER" | "ADMIN";
 
