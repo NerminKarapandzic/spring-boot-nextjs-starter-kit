@@ -14,7 +14,7 @@ export async function subscribeToNotifications() {
     );
     await navigator.serviceWorker.ready;
 
-    registration.active?.postMessage({ type: "CONFIG", apiUrl: process.env.NEXT_PUBLIC_API_URL });
+    registration.active?.postMessage({ type: "CONFIG", apiUrl: process.env.NEXT_PUBLIC_BASE_URL });
 
     // Get push subscription
     const subscription = await registration.pushManager.subscribe({
@@ -23,8 +23,6 @@ export async function subscribeToNotifications() {
         process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!
       ),
     });
-    console.log("Subscription:", subscription);
-    var enc = new TextDecoder();
 
     // Send subscription to backend
     try {

@@ -20,6 +20,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,6 +61,7 @@ public class SecurityConfiguration {
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate")).hasRole("ADMIN")
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/auth/impersonate/exit")).hasRole("PREVIOUS_ADMINISTRATOR")
           .requestMatchers(antMatcher(HttpMethod.GET, "/api/notifications/subscribe")).permitAll()
+          .requestMatchers(antMatcher(HttpMethod.POST, "/api/notifications/delivery/**")).permitAll()
           .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
           .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
           .requestMatchers(antMatcher("/swagger-resources/**")).permitAll()
@@ -81,11 +83,13 @@ public class SecurityConfiguration {
     http.addFilterBefore(new UsernamePasswordAuthenticationFilter(), LogoutFilter.class);
     http.userDetailsService(userDetailsService);
 
-    http.csrf(csrf -> {
-      csrf
-          .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-          .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler());
-    }).addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
+    http.csrf(AbstractHttpConfigurer::disable); // TODO: Implement jwt token based authentication
+
+//    http.csrf(csrf -> {
+//      csrf
+//          .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//          .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler());
+//    }).addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
 
     http.cors(customizer -> {
       customizer.configurationSource(corsConfigurationSource());

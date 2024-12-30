@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-22 19:03:57.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-30 16:38:59.
 
 export interface Notification {
     id: number;
@@ -23,6 +23,7 @@ export interface PushNotificationSubscription {
     endpoint: string;
     p256dhKey: string;
     authKey: string;
+    createdAt: Date;
 }
 
 export interface SendNotificationRequest {
@@ -35,6 +36,17 @@ export interface SubscriptionRequest {
     endpoint: string;
     p256dh: string;
     auth: string;
+}
+
+export interface NotificationSubscribersByDate {
+    date: string;
+    subscribers: number;
+}
+
+export interface NotificationsByDate {
+    date: string;
+    sent: number;
+    delivered: number;
 }
 
 export interface UploadedFile extends AbstractEntity {
@@ -128,22 +140,22 @@ export interface GrantedAuthority extends Serializable {
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
-    password: string;
     username: string;
+    password: string;
+    credentialsNonExpired: boolean;
+    accountNonExpired: boolean;
     authorities: GrantedAuthority[];
     accountNonLocked: boolean;
-    accountNonExpired: boolean;
-    credentialsNonExpired: boolean;
 }
 
 export interface MultipartFile extends InputStreamSource {
+    contentType: string;
     name: string;
     bytes: number[];
     empty: boolean;
     resource: Resource;
     size: number;
     originalFilename: string;
-    contentType: string;
 }
 
 export interface RedirectView extends AbstractUrlBasedView, SmartView {
@@ -200,9 +212,9 @@ export interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
     parent: ApplicationContext;
     id: string;
     displayName: string;
-    applicationName: string;
     startupDate: number;
     autowireCapableBeanFactory: AutowireCapableBeanFactory;
+    applicationName: string;
 }
 
 export interface ServletContext {
@@ -210,30 +222,30 @@ export interface ServletContext {
     majorVersion: number;
     minorVersion: number;
     attributeNames: Enumeration<string>;
+    responseCharacterEncoding: string;
+    requestCharacterEncoding: string;
     contextPath: string;
     /**
      * @deprecated
      */
     servlets: Enumeration<Servlet>;
+    sessionTimeout: number;
     /**
      * @deprecated
      */
     servletNames: Enumeration<string>;
     serverInfo: string;
-    sessionTimeout: number;
-    requestCharacterEncoding: string;
-    responseCharacterEncoding: string;
-    defaultSessionTrackingModes: SessionTrackingMode[];
-    effectiveSessionTrackingModes: SessionTrackingMode[];
-    effectiveMajorVersion: number;
-    servletRegistrations: { [index: string]: ServletRegistration };
-    jspConfigDescriptor: JspConfigDescriptor;
-    filterRegistrations: { [index: string]: FilterRegistration };
-    virtualServerName: string;
-    effectiveMinorVersion: number;
     initParameterNames: Enumeration<string>;
     servletContextName: string;
+    effectiveMajorVersion: number;
+    effectiveMinorVersion: number;
+    servletRegistrations: { [index: string]: ServletRegistration };
+    filterRegistrations: { [index: string]: FilterRegistration };
     sessionCookieConfig: SessionCookieConfig;
+    jspConfigDescriptor: JspConfigDescriptor;
+    virtualServerName: string;
+    defaultSessionTrackingModes: SessionTrackingMode[];
+    effectiveSessionTrackingModes: SessionTrackingMode[];
 }
 
 export interface AbstractUrlBasedView extends AbstractView, InitializingBean {
@@ -275,8 +287,8 @@ export interface EnvironmentCapable {
 }
 
 export interface ListableBeanFactory extends BeanFactory {
-    beanDefinitionNames: string[];
     beanDefinitionCount: number;
+    beanDefinitionNames: string[];
 }
 
 export interface HierarchicalBeanFactory extends BeanFactory {
@@ -301,13 +313,8 @@ export interface Servlet {
 }
 
 export interface ServletRegistration extends Registration {
-    runAsRole: string;
     mappings: string[];
-}
-
-export interface JspConfigDescriptor {
-    taglibs: TaglibDescriptor[];
-    jspPropertyGroups: JspPropertyGroupDescriptor[];
+    runAsRole: string;
 }
 
 export interface FilterRegistration extends Registration {
@@ -319,10 +326,15 @@ export interface SessionCookieConfig {
     name: string;
     path: string;
     comment: string;
+    httpOnly: boolean;
     secure: boolean;
     domain: string;
     maxAge: number;
-    httpOnly: boolean;
+}
+
+export interface JspConfigDescriptor {
+    jspPropertyGroups: JspPropertyGroupDescriptor[];
+    taglibs: TaglibDescriptor[];
 }
 
 export interface AbstractView extends WebApplicationObjectSupport, View, BeanNameAware {
@@ -351,8 +363,8 @@ export interface ResourceLoader {
 }
 
 export interface ServletConfig {
-    servletName: string;
     servletContext: ServletContext;
+    servletName: string;
     initParameterNames: Enumeration<string>;
 }
 
@@ -362,24 +374,24 @@ export interface Registration {
     initParameters: { [index: string]: string };
 }
 
+export interface JspPropertyGroupDescriptor {
+    buffer: string;
+    trimDirectiveWhitespaces: string;
+    errorOnUndeclaredNamespace: string;
+    deferredSyntaxAllowedAsLiteral: string;
+    pageEncoding: string;
+    urlPatterns: string[];
+    elIgnored: string;
+    includeCodas: string[];
+    includePreludes: string[];
+    scriptingInvalid: string;
+    defaultContentType: string;
+    isXml: string;
+}
+
 export interface TaglibDescriptor {
     taglibURI: string;
     taglibLocation: string;
-}
-
-export interface JspPropertyGroupDescriptor {
-    buffer: string;
-    includeCodas: string[];
-    includePreludes: string[];
-    elIgnored: string;
-    urlPatterns: string[];
-    pageEncoding: string;
-    isXml: string;
-    trimDirectiveWhitespaces: string;
-    deferredSyntaxAllowedAsLiteral: string;
-    errorOnUndeclaredNamespace: string;
-    scriptingInvalid: string;
-    defaultContentType: string;
 }
 
 export interface WebApplicationObjectSupport extends ApplicationObjectSupport, ServletContextAware {
@@ -479,6 +491,22 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP GET /api/notifications/stats/delivery
+     * Java method: com.example.backend.pushNotifications.NotificationsController.getNotificationDeliveryStats
+     */
+    getNotificationDeliveryStats(queryParams?: { from?: Date; to?: Date; }): RestResponse<NotificationsByDate[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/notifications/stats/delivery`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP GET /api/notifications/stats/subscriptions
+     * Java method: com.example.backend.pushNotifications.NotificationsController.getNotificationSubscriptionStats
+     */
+    getNotificationSubscriptionStats(queryParams?: { from?: Date; to?: Date; }): RestResponse<NotificationSubscribersByDate[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/notifications/stats/subscriptions`, queryParams: queryParams });
+    }
+
+    /**
      * HTTP POST /api/notifications/subscribe
      * Java method: com.example.backend.pushNotifications.NotificationsController.pushNotificationSubscribe
      */
@@ -543,7 +571,11 @@ export class RestApplicationClient {
     }
 }
 
-export type RestResponse<R> = Promise<R>;
+export type RestResponse<R> = Promise<{
+    data: R;
+    status: number;
+    statusText: string;
+}>;
 
 export type RequestEvent = "ONLOAD" | "USER_INTERACTION";
 

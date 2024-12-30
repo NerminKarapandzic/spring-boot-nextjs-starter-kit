@@ -3,10 +3,11 @@
 import Container from "@/components/Container";
 import { restClient } from "@/lib/httpClient";
 import { Button, TextInput, Title } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
 import { LineChart } from "@mantine/charts";
+import useSWR from "swr";
 
 export default function page() {
   const form = useForm({
@@ -34,6 +35,9 @@ export default function page() {
         });
       });
   };
+
+  const {data: notificationDeliveryData} = useSWR("/api/notifications/delivery", () => restClient.getNotificationDeliveryStats())
+  const {data: subscribersData} = useSWR("/api/notifications/stats/subscriptions", () => restClient.getNotificationSubscriptionStats())
 
   return (
     <Container size="xl">
@@ -67,15 +71,7 @@ export default function page() {
         <LineChart
           className="mt-4"
           h={300}
-          data={[
-            { date: "2021-01-01", sent: 20, delivered: 15 },
-            { date: "2021-01-02", sent: 20, delivered: 10 },
-            { date: "2021-01-03", sent: 30, delivered: 20 },
-            { date: "2021-01-04", sent: 40, delivered: 40 },
-            { date: "2021-01-05", sent: 50, delivered: 50 },
-            { date: "2021-01-06", sent: 40, delivered: 20 },
-            { date: "2021-01-07", sent: 70, delivered: 30 },
-          ]}
+          data={notificationDeliveryData?.data || []}
           dataKey="date"
           series={[
             { name: "sent", color: "indigo.6" },
@@ -91,19 +87,10 @@ export default function page() {
         <LineChart
           className="mt-4"
           h={300}
-          data={[
-            { date: "2021-01-01", subscriptions: 10, attempts: 20 },
-            { date: "2021-01-02", subscriptions: 20, attempts: 30 },
-            { date: "2021-01-03", subscriptions: 30, attempts: 40 },
-            { date: "2021-01-04", subscriptions: 40, attempts: 50 },
-            { date: "2021-01-05", subscriptions: 50, attempts: 60 },
-            { date: "2021-01-06", subscriptions: 60, attempts: 70 },
-            { date: "2021-01-07", subscriptions: 70, attempts: 80 },
-          ]}
+          data={subscribersData?.data || []}
           dataKey="date"
           series={[
-            { name: "subscriptions", color: "indigo.6" },
-            { name: "attempts", color: "blue.6" },
+            { name: "subscribers", color: "indigo.6" },
           ]}
           curveType="linear"
         />

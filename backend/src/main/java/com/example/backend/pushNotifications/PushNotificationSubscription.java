@@ -8,8 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -28,6 +30,9 @@ public class PushNotificationSubscription {
 
   @Column(name = "auth_key")
   private String authKey;
+
+  @CreationTimestamp
+  private LocalDateTime createdAt;
 
   public PushNotificationSubscription(String endpoint, String p256dhKey, String authKey) {
     this.endpoint = endpoint;

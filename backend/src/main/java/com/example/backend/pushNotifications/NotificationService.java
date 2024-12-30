@@ -1,11 +1,14 @@
 package com.example.backend.pushNotifications;
 
 import com.example.backend.config.ApplicationProperties;
+import com.example.backend.pushNotifications.projections.NotificationSubscribersByDate;
+import com.example.backend.pushNotifications.projections.NotificationsByDate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -102,5 +105,27 @@ public class NotificationService {
     Notification notification = notificationRepository.findById(id).orElseThrow();
     notification.setDelivered(true);
     notificationRepository.save(notification);
+  }
+
+  public List<NotificationsByDate> getDeliveryStats(LocalDateTime from, LocalDateTime to) {
+    if (from == null) {
+      from = LocalDateTime.now().minusDays(7);
+    }
+    if (to == null) {
+      to = LocalDateTime.now();
+    }
+    List<NotificationsByDate> stats = notificationRepository.countByCreatedAtBetween(from, to);
+    return stats;
+  }
+
+  public List<NotificationSubscribersByDate> getSubscriptionStats(LocalDateTime from, LocalDateTime to) {
+    if (from == null) {
+      from = LocalDateTime.now().minusDays(7);
+    }
+    if (to == null) {
+      to = LocalDateTime.now();
+    }
+    List<NotificationSubscribersByDate> stats = notificationSubscriptionRepository.countByCreatedAtBetween(from, to);
+    return stats;
   }
 }

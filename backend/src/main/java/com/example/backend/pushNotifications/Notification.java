@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
@@ -26,7 +27,7 @@ public class Notification {
   @Setter
   private boolean delivered;
 
-  @CreatedDate
+  @CreationTimestamp
   private LocalDateTime createdAt;
 
   public Notification(String title, String message, String url) {
