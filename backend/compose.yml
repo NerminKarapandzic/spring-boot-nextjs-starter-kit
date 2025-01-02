@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:9.1.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'starter_db'
+      MYSQL_USER: 'yu71'
+      MYSQL_PASSWORD: '53cret'
+      MYSQL_ROOT_PASSWORD: '53cret'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+volumes:
+  my-db:
