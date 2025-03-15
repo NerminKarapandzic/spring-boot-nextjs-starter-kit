@@ -33,7 +33,7 @@ export const useAuthGuard = ({
     props: LoginRequest;
   }) => {
     onError(undefined);
-    await csrf();
+    // await csrf();
     restClient.login(props)
       .then(() => mutate())
       .catch((err) => {
@@ -42,9 +42,9 @@ export const useAuthGuard = ({
       });
   };
 
-  const csrf = async () => {
-    await restClient.csrf();
-  };
+  // const csrf = async () => {
+  //   await restClient.csrf();
+  // };
 
   const logout = async () => {
     if (!error) {
